@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: swiftstock
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.12.0
+      - key: JWT_SECRET
+        value: codecampus_final_project_jwt_secret_key_2026
+      - key: SUPABASE_URL
+        value: https://mwcmdlxpfquyzfpsbwxo.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13Y21kbHhwZnF1eXpmcHNid3hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2NDA5NTQsImV4cCI6MjEwMzIxNjk1NH0.4fBvuJ1kj-HNLaVe8fsGup1VHjUQskFJ02WHZbhsDdo

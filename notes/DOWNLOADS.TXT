@@ -1,0 +1,6 @@
+# DOWNLOADS.TXT
+Download: npm dependencies (express, cors, dotenv, bcryptjs, jsonwebtoken, @supabase/supabase-js)
+Packages Installed: 95 packages
+Size: ~25MB (node_modules)
+Status: Completed
+Progress: 100%

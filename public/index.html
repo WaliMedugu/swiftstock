@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftStock — Editorial Commerce & Inventory System</title>
+  <meta name="description" content="Warm Editorial Full Stack Commerce & Inventory Management System with RBAC, Analytics, and Real-time Auditing.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Global App Notification Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- AUTHENTICATION VIEW -->
+  <div id="authView" class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="brand-badge"><i class="fa-solid fa-boxes-stacked"></i></div>
+        <div class="section-label">Blue Particle Commerce</div>
+        <h2>Swift<em>Stock</em></h2>
+        <p class="subtitle">Intelligent Commerce & Inventory Ledger</p>
+      </div>
+
+      <!-- Auth Tabs -->
+      <div class="auth-tabs">
+        <button id="tabLoginBtn" class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
+        <button id="tabRegisterBtn" class="auth-tab" onclick="switchAuthTab('register')">Register</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label><i class="fa-regular fa-envelope"></i> Email Address</label>
+          <input type="email" id="loginEmail" placeholder="admin@swiftstock.com" required value="admin@swiftstock.com">
+        </div>
+        <div class="form-group">
+          <label><i class="fa-solid fa-lock"></i> Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required value="admin123">
+        </div>
+        <button type="submit" class="btn btn-p btn-block" id="loginSubmitBtn">
+          <span>Enter Portal</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+        <div class="demo-hints">
+          <p class="mono-label">Quick Access Profiles:</p>
+          <div class="demo-pills">
+            <span onclick="setDemoCredentials('admin@swiftstock.com', 'admin123')">Admin</span>
+            <span onclick="setDemoCredentials('manager@swiftstock.com', 'manager123')">Manager</span>
+            <span onclick="setDemoCredentials('staff@swiftstock.com', 'staff123')">Staff</span>
+          </div>
+        </div>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" class="auth-form hidden" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label><i class="fa-regular fa-user"></i> Full Name</label>
+          <input type="text" id="regName" placeholder="e.g. Eleanor Vance" required>
+        </div>
+        <div class="form-group">
+          <label><i class="fa-regular fa-envelope"></i> Email Address</label>
+          <input type="email" id="regEmail" placeholder="e.g. eleanor@swiftstock.com" required>
+        </div>
+        <div class="form-group">
+          <label><i class="fa-solid fa-lock"></i> Password (min 6 chars)</label>
+          <input type="password" id="regPassword" placeholder="••••••••" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label><i class="fa-solid fa-user-shield"></i> System Role</label>
+          <select id="regRole" required>
+            <option value="staff">Staff (Sales & Order Processing)</option>
+            <option value="manager">Manager (Stock & Catalog Operations)</option>
+            <option value="admin">Administrator (Complete Authority)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-p btn-block" id="regSubmitBtn">
+          <span>Register Account</span>
+          <i class="fa-solid fa-user-plus"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN APPLICATION VIEW -->
+  <div id="mainApp" class="app-layout hidden">
+    <!-- Dark Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <i class="fa-solid fa-boxes-stacked"></i>
+          <span>Swift<em>Stock</em></span>
+        </div>
+        <span class="ftag ftag-terra">v1.0</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-category-label">Main Navigation</div>
+        <a href="#dashboard" class="nav-item active" onclick="navigateTo('dashboard', event)">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#products" class="nav-item" onclick="navigateTo('products', event)">
+          <i class="fa-solid fa-boxes-packing"></i>
+          <span>Inventory & Catalog</span>
+        </a>
+        <a href="#orders" class="nav-item" onclick="navigateTo('orders', event)">
+          <i class="fa-solid fa-receipt"></i>
+          <span>Sales & Orders</span>
+        </a>
+        <a href="#audit" id="auditNavItem" class="nav-item" onclick="navigateTo('audit', event)">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>Audit Ledger</span>
+        </a>
+      </nav>
+
+      <!-- User Profile Widget in Sidebar -->
+      <div class="user-profile-widget">
+        <img id="userAvatar" src="" alt="User Avatar" class="user-avatar">
+        <div class="user-info">
+          <span id="userName" class="user-name">User</span>
+          <span id="userRoleBadge" class="ftag ftag-dark">Admin</span>
+        </div>
+        <button class="btn-logout" title="Sign Out" onclick="handleLogout()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="top-bar">
+        <div class="page-title-box">
+          <div class="section-label" id="pageSectionTag">Overview</div>
+          <h1 id="pageHeading">Executive Dashboard</h1>
+          <p id="pageSubheading">Real-time inventory valuation, revenue metrics, and commercial transactions.</p>
+        </div>
+        <div class="top-bar-actions">
+          <span class="db-status-pill"><i class="fa-solid fa-circle"></i> Supabase / PostgreSQL Active</span>
+          <button class="btn btn-o" onclick="exportCurrentTableToCSV()">
+            <i class="fa-solid fa-file-csv"></i> Export CSV
+          </button>
+          <button id="topActionBtn" class="btn btn-p" onclick="handleTopActionClick()">
+            <i class="fa-solid fa-plus"></i> <span id="topActionBtnText">New Order</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- View 1: DASHBOARD -->
+      <section id="viewDashboard" class="view-panel">
+        <!-- KPI Metrics Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon revenue"><i class="fa-solid fa-dollar-sign"></i></div>
+            <div class="metric-details">
+              <span class="mono-label">Gross Revenue</span>
+              <h3 id="statRevenue">$0.00</h3>
+              <span class="ftag ftag-green"><i class="fa-solid fa-arrow-trend-up"></i> Live Sales</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon orders"><i class="fa-solid fa-cart-shopping"></i></div>
+            <div class="metric-details">
+              <span class="mono-label">Completed Orders</span>
+              <h3 id="statOrders">0</h3>
+              <span class="ftag ftag-terra">Fulfilled</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon products"><i class="fa-solid fa-warehouse"></i></div>
+            <div class="metric-details">
+              <span class="mono-label">Catalog Products</span>
+              <h3 id="statProducts">0</h3>
+              <span class="ftag ftag-dark" id="statStockUnits">0 units</span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon alerts"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="metric-details">
+              <span class="mono-label">Stock Warnings</span>
+              <h3 id="statAlerts">0</h3>
+              <span class="ftag ftag-rust" id="statAlertText">Low / Depleted</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Two-Column Grid -->
+        <div class="dashboard-grid">
+          <!-- Recent Orders Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-clock"></i> Recent Sales Orders</h3>
+              <button class="btn btn-o btn-sm" onclick="navigateTo('orders')">View All</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="recentOrdersTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Category Breakdown -->
+          <div class="card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-chart-column"></i> Revenue by Department</h3>
+            </div>
+            <div id="categorySalesList" class="category-breakdown-list">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 2: PRODUCTS & INVENTORY -->
+      <section id="viewProducts" class="view-panel hidden">
+        <div class="toolbar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="productSearch" placeholder="Search by name, SKU, or department..." oninput="handleProductSearch()">
+          </div>
+          <div class="filter-group">
+            <select id="categoryFilter" onchange="loadProducts()">
+              <option value="all">All Departments</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Office Furniture">Office Furniture</option>
+              <option value="Accessories">Accessories</option>
+              <option value="Networking">Networking</option>
+            </select>
+            <select id="statusFilter" onchange="loadProducts()">
+              <option value="all">All Stock Statuses</option>
+              <option value="In Stock">In Stock</option>
+              <option value="Low Stock">Low Stock</option>
+              <option value="Out of Stock">Out of Stock</option>
+            </select>
+            <button id="addProductBtn" class="btn btn-p" onclick="openProductModal()">
+              <i class="fa-solid fa-plus"></i> Add Product
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-responsive">
+            <table class="data-table" id="productsTable">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>SKU</th>
+                  <th>Department</th>
+                  <th>Unit Price</th>
+                  <th>Quantity</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productsTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 3: ORDERS & TRANSACTIONS -->
+      <section id="viewOrders" class="view-panel hidden">
+        <div class="toolbar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="orderSearch" placeholder="Search orders by invoice number or client..." oninput="loadOrders()">
+          </div>
+          <button class="btn btn-p" onclick="openNewOrderModal()">
+            <i class="fa-solid fa-cart-plus"></i> Record Sale
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="table-responsive">
+            <table class="data-table" id="ordersTable">
+              <thead>
+                <tr>
+                  <th>Invoice #</th>
+                  <th>Customer</th>
+                  <th>Items Purchased</th>
+                  <th>Total</th>
+                  <th>Method</th>
+                  <th>Recorded By</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 4: AUDIT LOGS -->
+      <section id="viewAudit" class="view-panel hidden">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-shield-halved"></i> Chronological Security & Audit Ledger</h3>
+            <span class="ftag ftag-terra">Real-time Stream</span>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="auditTable">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Authorized User</th>
+                  <th>Action</th>
+                  <th>Details</th>
+                  <th>Origin IP</th>
+                </tr>
+              </thead>
+              <tbody id="auditTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL: ADD / EDIT PRODUCT -->
+  <div id="productModal" class="modal-overlay hidden">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="productModalTitle">Add New Product</h3>
+        <button class="btn-close" onclick="closeProductModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="productForm" onsubmit="handleProductSubmit(event)">
+        <input type="hidden" id="editProductId">
+        <div class="form-group">
+          <label>Product Title *</label>
+          <input type="text" id="prodName" required placeholder="e.g. Precision Studio Monitor">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Department / Category *</label>
+            <select id="prodCategory" required>
+              <option value="Electronics">Electronics</option>
+              <option value="Office Furniture">Office Furniture</option>
+              <option value="Accessories">Accessories</option>
+              <option value="Networking">Networking</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>SKU Identification</label>
+            <input type="text" id="prodSku" placeholder="Auto-generated if left blank">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Retail Price ($) *</label>
+            <input type="number" id="prodPrice" step="0.01" min="0" required placeholder="299.00">
+          </div>
+          <div class="form-group">
+            <label>Acquisition Cost ($)</label>
+            <input type="number" id="prodCostPrice" step="0.01" min="0" placeholder="180.00">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Stock Volume *</label>
+            <input type="number" id="prodStock" min="0" required placeholder="25">
+          </div>
+          <div class="form-group">
+            <label>Alert Threshold</label>
+            <input type="number" id="prodMinAlert" min="0" value="5">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-o" onclick="closeProductModal()">Cancel</button>
+          <button type="submit" class="btn btn-p" id="saveProductBtn">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CREATE ORDER -->
+  <div id="orderModal" class="modal-overlay hidden">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3>Record Sales Transaction</h3>
+        <button class="btn-close" onclick="closeOrderModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="orderForm" onsubmit="handleOrderSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Client / Customer Name *</label>
+            <input type="text" id="orderCustName" required placeholder="e.g. Apex Workspace Ltd">
+          </div>
+          <div class="form-group">
+            <label>Billing Email</label>
+            <input type="email" id="orderCustEmail" placeholder="billing@apex.co">
+          </div>
+        </div>
+
+        <div class="order-items-section">
+          <h4><i class="fa-solid fa-layer-group" style="color:var(--terracotta);margin-right:6px;"></i> Selected Items & Quantities</h4>
+          <div id="orderItemsContainer" class="order-items-container">
+            <!-- Dynamic item row -->
+          </div>
+          <button type="button" class="btn btn-sm btn-o" onclick="addOrderItemRow()">
+            <i class="fa-solid fa-plus"></i> Add Item
+          </button>
+        </div>
+
+        <div class="order-summary-box">
+          <div class="form-group">
+            <label>Payment Method</label>
+            <select id="orderPaymentMethod">
+              <option value="Card">Bank Card</option>
+              <option value="Transfer">Direct Transfer</option>
+              <option value="Online">Online Gateway</option>
+              <option value="Cash">Cash on Delivery</option>
+            </select>
+          </div>
+          <div class="total-display">
+            <span class="mono-label">Total Payable:</span>
+            <strong id="orderTotalDisplay">$0.00</strong>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-o" onclick="closeOrderModal()">Cancel</button>
+          <button type="submit" class="btn btn-p">Commit Sale & Deduct Stock</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
