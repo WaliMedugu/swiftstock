@@ -2,7 +2,9 @@
 
 > **Code Campus International | Full Stack Innovation Project 2026**  
 > **Category 02:** Digital Economy, Commerce & Business Systems  
-> **Author:** Wali Medugu
+> **Author:** Wali Medugu  
+> **Live Deployed App:** [https://swiftstock-xrj9.onrender.com](https://swiftstock-xrj9.onrender.com)  
+> **GitHub Repository:** [https://github.com/WaliMedugu/swiftstock](https://github.com/WaliMedugu/swiftstock)
 
 ---
 
