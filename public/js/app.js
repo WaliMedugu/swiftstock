@@ -255,6 +255,9 @@ async function loadDashboard() {
 
     const { metrics, categorySales, recentOrders } = data;
 
+    // Background preload products for immediate modal availability
+    loadProducts();
+
     // Metrics
     document.getElementById("statRevenue").textContent = `$${metrics.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
     document.getElementById("statOrders").textContent = metrics.totalOrders;
@@ -497,10 +500,13 @@ function renderOrdersTable(orders) {
   }).join("");
 }
 
-function openNewOrderModal() {
+async function openNewOrderModal() {
   document.getElementById("orderForm").reset();
   const container = document.getElementById("orderItemsContainer");
   container.innerHTML = "";
+  if (!allProducts || allProducts.length === 0) {
+    await loadProducts();
+  }
   addOrderItemRow();
   document.getElementById("orderModal").classList.remove("hidden");
   updateOrderTotal();
