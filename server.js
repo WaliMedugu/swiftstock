@@ -54,8 +54,7 @@ app.get("*", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`====================================================`);
-  console.log(`🚀 SwiftStock Full Stack Server is running on port ${PORT}`);
-  console.log(`📡 Local URL: http://localhost:${PORT}`);
-  console.log(`🛡️  Auth, RBAC, REST APIs & Database ready`);
+  console.log(`Running on port ${PORT}`);
+  console.log(`Local URL: http://localhost:${PORT}`);
   console.log(`====================================================`);
 });

@@ -124,3 +124,7 @@ Open your browser and navigate to: **`http://localhost:5050`**
 - **Admin**: `admin@swiftstock.com` / `admin123`
 - **Manager**: `manager@swiftstock.com` / `manager123`
 - **Staff**: `staff@swiftstock.com` / `staff123`
+
+
+Manage a way to hide username and password in the database, encrypt them
+

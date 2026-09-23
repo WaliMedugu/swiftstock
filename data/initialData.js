@@ -13,7 +13,7 @@ export const initialUsers = [
   },
   {
     id: 2,
-    name: "Manager Alex",
+    name: "Manager Wali",
     email: "manager@swiftstock.com",
     password_hash: bcrypt.hashSync("manager123", 10),
     role: "manager",
@@ -22,7 +22,7 @@ export const initialUsers = [
   },
   {
     id: 3,
-    name: "Staff Sarah",
+    name: "Staff Harry",
     email: "staff@swiftstock.com",
     password_hash: bcrypt.hashSync("staff123", 10),
     role: "staff",
