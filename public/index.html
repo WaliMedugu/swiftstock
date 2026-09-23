@@ -3,53 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SwiftStock — Editorial Commerce & Inventory System</title>
-  <meta name="description" content="Warm Editorial Full Stack Commerce & Inventory Management System with RBAC, Analytics, and Real-time Auditing.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>SwiftStock — Editorial Commerce & Inventory Journal</title>
+  <meta name="description" content="A refined full stack commerce platform and inventory journal with real-time stock orchestration and role-based access.">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <!-- Global App Notification Toast -->
+  <!-- Global Notification Toast -->
   <div id="toast" class="toast hidden"></div>
 
   <!-- AUTHENTICATION VIEW -->
   <div id="authView" class="auth-wrapper">
     <div class="auth-card">
       <div class="auth-header">
-        <div class="brand-badge"><i class="fa-solid fa-boxes-stacked"></i></div>
-        <div class="section-label">Blue Particle Commerce</div>
+        <div class="brand-monogram">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="24" height="24" rx="2" stroke="currentColor" stroke-width="1.75"/>
+            <path d="M4 12H28M12 12V28" stroke="currentColor" stroke-width="1.75"/>
+            <circle cx="20" cy="20" r="3" fill="var(--terracotta)"/>
+          </svg>
+        </div>
+        <span class="mono-kicker">Commerce & Ledger</span>
         <h2>Swift<em>Stock</em></h2>
-        <p class="subtitle">Intelligent Commerce & Inventory Ledger</p>
+        <p class="subtitle">An archival ledger for inventory orchestration and real-time sales transactions.</p>
       </div>
 
-      <!-- Auth Tabs -->
+      <!-- Auth Switcher -->
       <div class="auth-tabs">
         <button id="tabLoginBtn" class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
-        <button id="tabRegisterBtn" class="auth-tab" onclick="switchAuthTab('register')">Register</button>
+        <button id="tabRegisterBtn" class="auth-tab" onclick="switchAuthTab('register')">Register Account</button>
       </div>
 
       <!-- Login Form -->
       <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
         <div class="form-group">
-          <label><i class="fa-regular fa-envelope"></i> Email Address</label>
+          <label class="mono-label">Account Email</label>
           <input type="email" id="loginEmail" placeholder="admin@swiftstock.com" required value="admin@swiftstock.com">
         </div>
         <div class="form-group">
-          <label><i class="fa-solid fa-lock"></i> Password</label>
+          <label class="mono-label">Security Passphrase</label>
           <input type="password" id="loginPassword" placeholder="••••••••" required value="admin123">
         </div>
         <button type="submit" class="btn btn-p btn-block" id="loginSubmitBtn">
-          <span>Enter Portal</span>
-          <i class="fa-solid fa-arrow-right"></i>
+          <span>Enter Journal</span>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
 
         <div class="demo-hints">
-          <p class="mono-label">Quick Access Profiles:</p>
+          <span class="mono-label">Preset Access Roles:</span>
           <div class="demo-pills">
-            <span onclick="setDemoCredentials('admin@swiftstock.com', 'admin123')">Admin</span>
+            <span onclick="setDemoCredentials('admin@swiftstock.com', 'admin123')">Administrator</span>
             <span onclick="setDemoCredentials('manager@swiftstock.com', 'manager123')">Manager</span>
             <span onclick="setDemoCredentials('staff@swiftstock.com', 'staff123')">Staff</span>
           </div>
@@ -59,28 +61,28 @@
       <!-- Register Form -->
       <form id="registerForm" class="auth-form hidden" onsubmit="handleRegister(event)">
         <div class="form-group">
-          <label><i class="fa-regular fa-user"></i> Full Name</label>
+          <label class="mono-label">Full Name</label>
           <input type="text" id="regName" placeholder="e.g. Eleanor Vance" required>
         </div>
         <div class="form-group">
-          <label><i class="fa-regular fa-envelope"></i> Email Address</label>
+          <label class="mono-label">Email Address</label>
           <input type="email" id="regEmail" placeholder="e.g. eleanor@swiftstock.com" required>
         </div>
         <div class="form-group">
-          <label><i class="fa-solid fa-lock"></i> Password (min 6 chars)</label>
+          <label class="mono-label">Create Passphrase</label>
           <input type="password" id="regPassword" placeholder="••••••••" required minlength="6">
         </div>
         <div class="form-group">
-          <label><i class="fa-solid fa-user-shield"></i> System Role</label>
+          <label class="mono-label">Assigned Role</label>
           <select id="regRole" required>
-            <option value="staff">Staff (Sales & Order Processing)</option>
-            <option value="manager">Manager (Stock & Catalog Operations)</option>
-            <option value="admin">Administrator (Complete Authority)</option>
+            <option value="staff">Staff — Order Desk & Invoicing</option>
+            <option value="manager">Manager — Stock & Catalog Operations</option>
+            <option value="admin">Administrator — Complete Authority</option>
           </select>
         </div>
         <button type="submit" class="btn btn-p btn-block" id="regSubmitBtn">
-          <span>Register Account</span>
-          <i class="fa-solid fa-user-plus"></i>
+          <span>Complete Registration</span>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
         </button>
       </form>
     </div>
@@ -88,253 +90,313 @@
 
   <!-- MAIN APPLICATION VIEW -->
   <div id="mainApp" class="app-layout hidden">
-    <!-- Dark Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <div class="brand-logo">
-          <i class="fa-solid fa-boxes-stacked"></i>
-          <span>Swift<em>Stock</em></span>
+    
+    <!-- Bespoke Top Navigation Bar (Anthropic-style editorial header) -->
+    <header class="app-header">
+      <div class="header-container">
+        
+        <div class="brand-group">
+          <div class="brand-logo">
+            <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+              <rect x="4" y="4" width="24" height="24" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M4 12H28M12 12V28" stroke="currentColor" stroke-width="2"/>
+              <circle cx="20" cy="20" r="3" fill="var(--terracotta)"/>
+            </svg>
+            <span>Swift<em>Stock</em></span>
+          </div>
+          <div class="divider-vertical"></div>
+          <span class="system-status-pill">
+            <span class="pulse-dot"></span> PostgreSQL / Supabase Synced
+          </span>
         </div>
-        <span class="ftag ftag-terra">v1.0</span>
-      </div>
 
-      <nav class="sidebar-nav">
-        <div class="sidebar-category-label">Main Navigation</div>
-        <a href="#dashboard" class="nav-item active" onclick="navigateTo('dashboard', event)">
-          <i class="fa-solid fa-chart-pie"></i>
-          <span>Dashboard</span>
-        </a>
-        <a href="#products" class="nav-item" onclick="navigateTo('products', event)">
-          <i class="fa-solid fa-boxes-packing"></i>
-          <span>Inventory & Catalog</span>
-        </a>
-        <a href="#orders" class="nav-item" onclick="navigateTo('orders', event)">
-          <i class="fa-solid fa-receipt"></i>
-          <span>Sales & Orders</span>
-        </a>
-        <a href="#audit" id="auditNavItem" class="nav-item" onclick="navigateTo('audit', event)">
-          <i class="fa-solid fa-clock-rotate-left"></i>
-          <span>Audit Ledger</span>
-        </a>
-      </nav>
+        <!-- Primary Top Navigation Tabs -->
+        <nav class="editorial-nav">
+          <a href="#dashboard" class="nav-link active" onclick="navigateTo('dashboard', event)">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>Overview</span>
+          </a>
+          <a href="#products" class="nav-link" onclick="navigateTo('products', event)">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2 5L8 2L14 5L8 8L2 5Z" stroke="currentColor" stroke-width="1.5"/><path d="M2 11L8 14L14 11M2 8L8 11L14 8" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>Inventory</span>
+          </a>
+          <a href="#orders" class="nav-link" onclick="navigateTo('orders', event)">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 2H13V14L10.5 12.5L8 14L5.5 12.5L3 14V2Z" stroke="currentColor" stroke-width="1.5"/><path d="M6 5H10M6 8H10" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>Transactions</span>
+          </a>
+          <a href="#audit" id="auditNavItem" class="nav-link" onclick="navigateTo('audit', event)">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 5V8.5L10.5 10" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>Audit Trail</span>
+          </a>
+        </nav>
 
-      <!-- User Profile Widget in Sidebar -->
-      <div class="user-profile-widget">
-        <img id="userAvatar" src="" alt="User Avatar" class="user-avatar">
-        <div class="user-info">
-          <span id="userName" class="user-name">User</span>
-          <span id="userRoleBadge" class="ftag ftag-dark">Admin</span>
-        </div>
-        <button class="btn-logout" title="Sign Out" onclick="handleLogout()">
-          <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        </button>
-      </div>
-    </aside>
-
-    <!-- Main Content Area -->
-    <main class="main-content">
-      <!-- Top Bar -->
-      <header class="top-bar">
-        <div class="page-title-box">
-          <div class="section-label" id="pageSectionTag">Overview</div>
-          <h1 id="pageHeading">Executive Dashboard</h1>
-          <p id="pageSubheading">Real-time inventory valuation, revenue metrics, and commercial transactions.</p>
-        </div>
-        <div class="top-bar-actions">
-          <span class="db-status-pill"><i class="fa-solid fa-circle"></i> Supabase / PostgreSQL Active</span>
-          <button class="btn btn-o" onclick="exportCurrentTableToCSV()">
-            <i class="fa-solid fa-file-csv"></i> Export CSV
+        <!-- Right User & Action Bar -->
+        <div class="header-actions">
+          <button class="btn btn-o btn-sm" onclick="exportCurrentTableToCSV()">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 2V10M8 10L5 7M8 10L11 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M2 13H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span>Export</span>
           </button>
-          <button id="topActionBtn" class="btn btn-p" onclick="handleTopActionClick()">
-            <i class="fa-solid fa-plus"></i> <span id="topActionBtnText">New Order</span>
+          
+          <button id="topActionBtn" class="btn btn-p btn-sm" onclick="handleTopActionClick()">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+            <span id="topActionBtnText">Record Sale</span>
           </button>
-        </div>
-      </header>
 
-      <!-- View 1: DASHBOARD -->
+          <div class="divider-vertical"></div>
+
+          <div class="user-chip">
+            <img id="userAvatar" src="" alt="Avatar" class="user-avatar-sm">
+            <div class="user-meta">
+              <span id="userName" class="user-name-text">Wali Medugu</span>
+              <span id="userRoleBadge" class="ftag ftag-terra">Admin</span>
+            </div>
+            <button class="btn-icon-logout" title="Sign Out" onclick="handleLogout()">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 2H3V14H6M10 5L13 8L10 11M13 8H5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- App Body Container -->
+    <main class="main-body">
+      
+      <!-- Section 1: EXECUTIVE JOURNAL (Dashboard) -->
       <section id="viewDashboard" class="view-panel">
-        <!-- KPI Metrics Grid -->
-        <div class="metrics-grid">
-          <div class="metric-card">
-            <div class="metric-icon revenue"><i class="fa-solid fa-dollar-sign"></i></div>
-            <div class="metric-details">
-              <span class="mono-label">Gross Revenue</span>
-              <h3 id="statRevenue">$0.00</h3>
-              <span class="ftag ftag-green"><i class="fa-solid fa-arrow-trend-up"></i> Live Sales</span>
+        
+        <!-- Editorial Headline & Ledger Meta -->
+        <div class="journal-hero">
+          <div class="journal-meta-row">
+            <div class="journal-title-box">
+              <span class="section-kicker">Statement of Accounts</span>
+              <h1 class="journal-headline">Commercial Ledger & Performance</h1>
+            </div>
+            <div class="journal-timestamp">
+              <span class="mono-label">Reporting Period</span>
+              <p id="currentLiveDate">Live Real-time Ledger</p>
             </div>
           </div>
-          <div class="metric-card">
-            <div class="metric-icon orders"><i class="fa-solid fa-cart-shopping"></i></div>
-            <div class="metric-details">
-              <span class="mono-label">Completed Orders</span>
-              <h3 id="statOrders">0</h3>
-              <span class="ftag ftag-terra">Fulfilled</span>
+
+          <!-- Anthropic-style Asymmetrical Statement Strip (Replaces typical 4 colored boxes) -->
+          <div class="statement-strip">
+            <div class="statement-primary">
+              <span class="mono-label">Gross Recognized Revenue</span>
+              <h2 class="hero-currency" id="statRevenue">$0.00</h2>
+              <div class="statement-subtext">
+                <span class="ftag ftag-green">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+                  Live Transactions
+                </span>
+                <span class="text-caption">Auto-calculated from fulfilled customer invoices</span>
+              </div>
             </div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-icon products"><i class="fa-solid fa-warehouse"></i></div>
-            <div class="metric-details">
-              <span class="mono-label">Catalog Products</span>
-              <h3 id="statProducts">0</h3>
-              <span class="ftag ftag-dark" id="statStockUnits">0 units</span>
-            </div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-icon alerts"><i class="fa-solid fa-triangle-exclamation"></i></div>
-            <div class="metric-details">
-              <span class="mono-label">Stock Warnings</span>
-              <h3 id="statAlerts">0</h3>
-              <span class="ftag ftag-rust" id="statAlertText">Low / Depleted</span>
+
+            <div class="statement-metrics-column">
+              <div class="statement-metric-item">
+                <span class="mono-label">Total Completed Orders</span>
+                <div class="metric-value-row">
+                  <span class="metric-num" id="statOrders">0</span>
+                  <span class="ftag ftag-dark">Fulfilled</span>
+                </div>
+              </div>
+              <div class="statement-metric-item">
+                <span class="mono-label">Catalog Goods in Stock</span>
+                <div class="metric-value-row">
+                  <span class="metric-num" id="statProducts">0</span>
+                  <span class="ftag ftag-dark" id="statStockUnits">0 units</span>
+                </div>
+              </div>
+              <div class="statement-metric-item">
+                <span class="mono-label">Depletion & Restock Alerts</span>
+                <div class="metric-value-row">
+                  <span class="metric-num" id="statAlerts">0</span>
+                  <span class="ftag ftag-rust" id="statAlertText">Action Required</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Dashboard Two-Column Grid -->
-        <div class="dashboard-grid">
-          <!-- Recent Orders Card -->
-          <div class="card">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-clock"></i> Recent Sales Orders</h3>
-              <button class="btn btn-o btn-sm" onclick="navigateTo('orders')">View All</button>
+        <!-- Two Column Journal Layout -->
+        <div class="journal-columns">
+          
+          <!-- Recent Orders Ledger Table -->
+          <div class="paper-card">
+            <div class="card-title-bar">
+              <div class="title-with-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2H13V14L10.5 12.5L8 14L5.5 12.5L3 14V2Z" stroke="var(--terracotta)" stroke-width="1.5"/><path d="M6 5H10M6 8H10" stroke="var(--terracotta)" stroke-width="1.5"/></svg>
+                <h3>Recent Commercial Invoices</h3>
+              </div>
+              <button class="btn btn-o btn-sm" onclick="navigateTo('orders')">Full Ledger</button>
             </div>
+            
             <div class="table-responsive">
-              <table class="data-table">
+              <table class="editorial-table">
                 <thead>
                   <tr>
-                    <th>Order #</th>
-                    <th>Customer</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Date</th>
+                    <th>Invoice No.</th>
+                    <th>Client / Customer</th>
+                    <th>Settlement</th>
+                    <th>State</th>
+                    <th>Recorded</th>
                   </tr>
                 </thead>
                 <tbody id="recentOrdersTableBody">
-                  <!-- Populated via JS -->
+                  <!-- JS Injected -->
                 </tbody>
               </table>
             </div>
           </div>
 
-          <!-- Category Breakdown -->
-          <div class="card">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-chart-column"></i> Revenue by Department</h3>
+          <!-- Departmental Allocation & Health -->
+          <div class="paper-card">
+            <div class="card-title-bar">
+              <div class="title-with-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14V8M6 14V4M10 14V10M14 14V2" stroke="var(--terracotta)" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <h3>Department Breakdown</h3>
+              </div>
             </div>
-            <div id="categorySalesList" class="category-breakdown-list">
-              <!-- Populated via JS -->
+            
+            <div id="categorySalesList" class="department-ledger-list">
+              <!-- JS Injected -->
             </div>
           </div>
+
         </div>
       </section>
 
-      <!-- View 2: PRODUCTS & INVENTORY -->
+      <!-- Section 2: INVENTORY & CATALOG -->
       <section id="viewProducts" class="view-panel hidden">
-        <div class="toolbar">
-          <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="productSearch" placeholder="Search by name, SKU, or department..." oninput="handleProductSearch()">
+        <div class="section-header-row">
+          <div>
+            <span class="section-kicker">Catalog Ledger</span>
+            <h1 class="journal-headline">Goods & Stock Inventories</h1>
           </div>
-          <div class="filter-group">
-            <select id="categoryFilter" onchange="loadProducts()">
+          
+          <div class="toolbar-actions">
+            <div class="search-field">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <input type="text" id="productSearch" placeholder="Filter by product name, SKU, or department..." oninput="handleProductSearch()">
+            </div>
+            
+            <select id="categoryFilter" class="editorial-select" onchange="loadProducts()">
               <option value="all">All Departments</option>
               <option value="Electronics">Electronics</option>
               <option value="Office Furniture">Office Furniture</option>
               <option value="Accessories">Accessories</option>
               <option value="Networking">Networking</option>
             </select>
-            <select id="statusFilter" onchange="loadProducts()">
+
+            <select id="statusFilter" class="editorial-select" onchange="loadProducts()">
               <option value="all">All Stock Statuses</option>
               <option value="In Stock">In Stock</option>
               <option value="Low Stock">Low Stock</option>
               <option value="Out of Stock">Out of Stock</option>
             </select>
+
             <button id="addProductBtn" class="btn btn-p" onclick="openProductModal()">
-              <i class="fa-solid fa-plus"></i> Add Product
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+              <span>Add Catalog Item</span>
             </button>
           </div>
         </div>
 
-        <div class="card">
+        <div class="paper-card">
           <div class="table-responsive">
-            <table class="data-table" id="productsTable">
+            <table class="editorial-table" id="productsTable">
               <thead>
                 <tr>
-                  <th>Product</th>
-                  <th>SKU</th>
+                  <th>Product Specification</th>
+                  <th>SKU Code</th>
                   <th>Department</th>
                   <th>Unit Price</th>
-                  <th>Quantity</th>
-                  <th>Status</th>
+                  <th>In Stock</th>
+                  <th>Availability</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="productsTableBody">
-                <!-- Dynamic Content -->
+                <!-- Injected via JS -->
               </tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- View 3: ORDERS & TRANSACTIONS -->
+      <!-- Section 3: TRANSACTIONS & SALES -->
       <section id="viewOrders" class="view-panel hidden">
-        <div class="toolbar">
-          <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="orderSearch" placeholder="Search orders by invoice number or client..." oninput="loadOrders()">
+        <div class="section-header-row">
+          <div>
+            <span class="section-kicker">Commercial Records</span>
+            <h1 class="journal-headline">Sales Invoices & Transactions</h1>
           </div>
-          <button class="btn btn-p" onclick="openNewOrderModal()">
-            <i class="fa-solid fa-cart-plus"></i> Record Sale
-          </button>
+          
+          <div class="toolbar-actions">
+            <div class="search-field">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <input type="text" id="orderSearch" placeholder="Search invoices by customer or number..." oninput="loadOrders()">
+            </div>
+            
+            <button class="btn btn-p" onclick="openNewOrderModal()">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+              <span>Record Sale & Deduct Stock</span>
+            </button>
+          </div>
         </div>
 
-        <div class="card">
+        <div class="paper-card">
           <div class="table-responsive">
-            <table class="data-table" id="ordersTable">
+            <table class="editorial-table" id="ordersTable">
               <thead>
                 <tr>
-                  <th>Invoice #</th>
-                  <th>Customer</th>
-                  <th>Items Purchased</th>
-                  <th>Total</th>
-                  <th>Method</th>
-                  <th>Recorded By</th>
-                  <th>Date</th>
+                  <th>Invoice ID</th>
+                  <th>Customer / Account</th>
+                  <th>Line Items</th>
+                  <th>Settlement Total</th>
+                  <th>Payment Type</th>
+                  <th>Audited By</th>
+                  <th>Date Recorded</th>
                 </tr>
               </thead>
               <tbody id="ordersTableBody">
-                <!-- Dynamic Content -->
+                <!-- Injected via JS -->
               </tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- View 4: AUDIT LOGS -->
+      <!-- Section 4: AUDIT TRAIL -->
       <section id="viewAudit" class="view-panel hidden">
-        <div class="card">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-shield-halved"></i> Chronological Security & Audit Ledger</h3>
-            <span class="ftag ftag-terra">Real-time Stream</span>
+        <div class="section-header-row">
+          <div>
+            <span class="section-kicker">Security Ledger</span>
+            <h1 class="journal-headline">Chronological Audit Stream</h1>
           </div>
+          <span class="ftag ftag-terra">Cryptographic Immutability</span>
+        </div>
+
+        <div class="paper-card">
           <div class="table-responsive">
-            <table class="data-table" id="auditTable">
+            <table class="editorial-table" id="auditTable">
               <thead>
                 <tr>
                   <th>Timestamp</th>
-                  <th>Authorized User</th>
-                  <th>Action</th>
-                  <th>Details</th>
+                  <th>Operator</th>
+                  <th>Action Type</th>
+                  <th>Event Details</th>
                   <th>Origin IP</th>
                 </tr>
               </thead>
               <tbody id="auditTableBody">
-                <!-- Dynamic Content -->
+                <!-- Injected via JS -->
               </tbody>
             </table>
           </div>
         </div>
       </section>
+
     </main>
   </div>
 
@@ -342,18 +404,25 @@
   <div id="productModal" class="modal-overlay hidden">
     <div class="modal-dialog">
       <div class="modal-header">
-        <h3 id="productModalTitle">Add New Product</h3>
-        <button class="btn-close" onclick="closeProductModal()"><i class="fa-solid fa-xmark"></i></button>
+        <div class="modal-title-wrap">
+          <span class="section-kicker">Catalog Entry</span>
+          <h3 id="productModalTitle">Add New Product</h3>
+        </div>
+        <button class="btn-close" onclick="closeProductModal()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        </button>
       </div>
+      
       <form id="productForm" onsubmit="handleProductSubmit(event)">
         <input type="hidden" id="editProductId">
         <div class="form-group">
-          <label>Product Title *</label>
-          <input type="text" id="prodName" required placeholder="e.g. Precision Studio Monitor">
+          <label class="mono-label">Product Name / Title *</label>
+          <input type="text" id="prodName" required placeholder="e.g. Dell UltraSharp 27-Inch 4K Monitor">
         </div>
+        
         <div class="form-row">
           <div class="form-group">
-            <label>Department / Category *</label>
+            <label class="mono-label">Department / Category *</label>
             <select id="prodCategory" required>
               <option value="Electronics">Electronics</option>
               <option value="Office Furniture">Office Furniture</option>
@@ -362,79 +431,93 @@
             </select>
           </div>
           <div class="form-group">
-            <label>SKU Identification</label>
-            <input type="text" id="prodSku" placeholder="Auto-generated if left blank">
+            <label class="mono-label">SKU Code</label>
+            <input type="text" id="prodSku" placeholder="Auto-generated if blank">
           </div>
         </div>
+
         <div class="form-row">
           <div class="form-group">
-            <label>Retail Price ($) *</label>
-            <input type="number" id="prodPrice" step="0.01" min="0" required placeholder="299.00">
+            <label class="mono-label">Retail Selling Price ($) *</label>
+            <input type="number" id="prodPrice" step="0.01" min="0" required placeholder="549.00">
           </div>
           <div class="form-group">
-            <label>Acquisition Cost ($)</label>
-            <input type="number" id="prodCostPrice" step="0.01" min="0" placeholder="180.00">
+            <label class="mono-label">Acquisition Cost ($)</label>
+            <input type="number" id="prodCostPrice" step="0.01" min="0" placeholder="380.00">
           </div>
         </div>
+
         <div class="form-row">
           <div class="form-group">
-            <label>Stock Volume *</label>
-            <input type="number" id="prodStock" min="0" required placeholder="25">
+            <label class="mono-label">Stock Quantity *</label>
+            <input type="number" id="prodStock" min="0" required placeholder="15">
           </div>
           <div class="form-group">
-            <label>Alert Threshold</label>
+            <label class="mono-label">Restock Threshold</label>
             <input type="number" id="prodMinAlert" min="0" value="5">
           </div>
         </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-o" onclick="closeProductModal()">Cancel</button>
-          <button type="submit" class="btn btn-p" id="saveProductBtn">Save Product</button>
+          <button type="submit" class="btn btn-p" id="saveProductBtn">Save Catalog Entry</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: CREATE ORDER -->
+  <!-- MODAL: RECORD SALES ORDER -->
   <div id="orderModal" class="modal-overlay hidden">
     <div class="modal-dialog modal-lg">
       <div class="modal-header">
-        <h3>Record Sales Transaction</h3>
-        <button class="btn-close" onclick="closeOrderModal()"><i class="fa-solid fa-xmark"></i></button>
+        <div class="modal-title-wrap">
+          <span class="section-kicker">Order Orchestration</span>
+          <h3>Record Sales Transaction</h3>
+        </div>
+        <button class="btn-close" onclick="closeOrderModal()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+        </button>
       </div>
+
       <form id="orderForm" onsubmit="handleOrderSubmit(event)">
         <div class="form-row">
           <div class="form-group">
-            <label>Client / Customer Name *</label>
-            <input type="text" id="orderCustName" required placeholder="e.g. Apex Workspace Ltd">
+            <label class="mono-label">Customer / Client Account *</label>
+            <input type="text" id="orderCustName" required placeholder="e.g. Apex Tech Workspace">
           </div>
           <div class="form-group">
-            <label>Billing Email</label>
-            <input type="email" id="orderCustEmail" placeholder="billing@apex.co">
+            <label class="mono-label">Billing Email</label>
+            <input type="email" id="orderCustEmail" placeholder="billing@apextech.io">
           </div>
         </div>
 
-        <div class="order-items-section">
-          <h4><i class="fa-solid fa-layer-group" style="color:var(--terracotta);margin-right:6px;"></i> Selected Items & Quantities</h4>
+        <div class="order-items-box">
+          <div class="order-items-header">
+            <span class="mono-label">Selected Goods & Unit Counts</span>
+            <button type="button" class="btn btn-sm btn-o" onclick="addOrderItemRow()">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+              <span>Add Line Item</span>
+            </button>
+          </div>
+          
           <div id="orderItemsContainer" class="order-items-container">
-            <!-- Dynamic item row -->
+            <!-- Dynamic Line Rows -->
           </div>
-          <button type="button" class="btn btn-sm btn-o" onclick="addOrderItemRow()">
-            <i class="fa-solid fa-plus"></i> Add Item
-          </button>
         </div>
 
-        <div class="order-summary-box">
-          <div class="form-group">
-            <label>Payment Method</label>
+        <div class="settlement-summary">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="mono-label">Payment Instrument</label>
             <select id="orderPaymentMethod">
-              <option value="Card">Bank Card</option>
-              <option value="Transfer">Direct Transfer</option>
-              <option value="Online">Online Gateway</option>
-              <option value="Cash">Cash on Delivery</option>
+              <option value="Card">Bank Debit / Credit Card</option>
+              <option value="Transfer">Direct Bank Transfer</option>
+              <option value="Online">Online Gateway Payment</option>
+              <option value="Cash">Cash Settlement</option>
             </select>
           </div>
-          <div class="total-display">
-            <span class="mono-label">Total Payable:</span>
+          
+          <div class="payable-total-box">
+            <span class="mono-label">Total Settlement:</span>
             <strong id="orderTotalDisplay">$0.00</strong>
           </div>
         </div>

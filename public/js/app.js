@@ -1,4 +1,4 @@
-// SwiftStock Frontend Client Application — Blue Particle Studios Warm Editorial Edition
+// SwiftStock Frontend Client — Anthropic-Inspired Editorial Edition
 
 const API_BASE = "/api";
 let currentUser = null;
@@ -17,11 +17,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Toast notification helper
+// Toast notification helper with custom SVGs
 function showToast(message, type = "success") {
   const toast = document.getElementById("toast");
   toast.className = `toast ${type}`;
-  toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-triangle-exclamation'}" style="color:${type === 'success' ? 'var(--green)' : 'var(--rust)'}"></i> <span>${message}</span>`;
+  
+  const iconSvg = type === "success" 
+    ? `<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--green)" stroke-width="1.5"/><path d="M5 8L7 10L11 6" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+    : `<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--rust)" stroke-width="1.5"/><path d="M8 5V9M8 11.5V12" stroke="var(--rust)" stroke-width="1.75" stroke-linecap="round"/></svg>`;
+
+  toast.innerHTML = `${iconSvg} <span>${message}</span>`;
   toast.classList.remove("hidden");
   setTimeout(() => {
     toast.classList.add("hidden");
@@ -63,7 +68,7 @@ async function handleLogin(e) {
   const submitBtn = document.getElementById("loginSubmitBtn");
 
   submitBtn.disabled = true;
-  submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...`;
+  submitBtn.innerHTML = `<span>Authenticating...</span>`;
 
   try {
     const res = await fetch(`${API_BASE}/auth/login`, {
@@ -85,7 +90,7 @@ async function handleLogin(e) {
     showToast(err.message, "error");
   } finally {
     submitBtn.disabled = false;
-    submitBtn.innerHTML = `<span>Enter Portal</span> <i class="fa-solid fa-arrow-right"></i>`;
+    submitBtn.innerHTML = `<span>Enter Journal</span> <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   }
 }
 
@@ -98,7 +103,7 @@ async function handleRegister(e) {
   const submitBtn = document.getElementById("regSubmitBtn");
 
   submitBtn.disabled = true;
-  submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Registering...`;
+  submitBtn.innerHTML = `<span>Registering...</span>`;
 
   try {
     const res = await fetch(`${API_BASE}/auth/register`, {
@@ -120,7 +125,7 @@ async function handleRegister(e) {
     showToast(err.message, "error");
   } finally {
     submitBtn.disabled = false;
-    submitBtn.innerHTML = `<span>Register Account</span> <i class="fa-solid fa-user-plus"></i>`;
+    submitBtn.innerHTML = `<span>Complete Registration</span> <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>`;
   }
 }
 
@@ -145,7 +150,7 @@ function handleLogout() {
   currentUser = null;
   localStorage.removeItem("swiftstock_token");
   showAuthView();
-  showToast("Session ended", "success");
+  showToast("Session closed", "success");
 }
 
 function showAuthView() {
@@ -175,10 +180,10 @@ function applyRBAC() {
   const addProdBtn = document.getElementById("addProductBtn");
 
   if (role === "staff") {
-    auditNav.classList.add("hidden");
+    if (auditNav) auditNav.classList.add("hidden");
     if (addProdBtn) addProdBtn.classList.add("hidden");
   } else {
-    auditNav.classList.remove("hidden");
+    if (auditNav) auditNav.classList.remove("hidden");
     if (addProdBtn) addProdBtn.classList.remove("hidden");
   }
 }
@@ -189,50 +194,35 @@ function applyRBAC() {
 function navigateTo(viewName, event) {
   if (event) event.preventDefault();
 
-  document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".nav-link").forEach(el => el.classList.remove("active"));
   document.querySelectorAll(".view-panel").forEach(el => el.classList.add("hidden"));
 
-  const targetNav = document.querySelector(`.nav-item[href="#${viewName}"]`);
+  const targetNav = document.querySelector(`.nav-link[href="#${viewName}"]`);
   if (targetNav) targetNav.classList.add("active");
 
-  const heading = document.getElementById("pageHeading");
-  const subheading = document.getElementById("pageSubheading");
-  const sectionTag = document.getElementById("pageSectionTag");
   const topActionBtnText = document.getElementById("topActionBtnText");
 
   if (viewName === "dashboard") {
     document.getElementById("viewDashboard").classList.remove("hidden");
-    sectionTag.textContent = "Executive Ledger";
-    heading.textContent = "Executive Dashboard";
-    subheading.textContent = "Real-time inventory valuation, revenue metrics, and commercial transactions.";
     topActionBtnText.textContent = "Record Sale";
     loadDashboard();
   } else if (viewName === "products") {
     document.getElementById("viewProducts").classList.remove("hidden");
-    sectionTag.textContent = "Catalog Index";
-    heading.textContent = "Inventory & Catalog";
-    subheading.textContent = "Manage product catalog, real-time stock balances, and alert thresholds.";
     topActionBtnText.textContent = currentUser.role === "staff" ? "Record Sale" : "Add Product";
     loadProducts();
   } else if (viewName === "orders") {
     document.getElementById("viewOrders").classList.remove("hidden");
-    sectionTag.textContent = "Commercial Transactions";
-    heading.textContent = "Sales & Orders";
-    subheading.textContent = "Track commercial invoices, customer transactions, and order fulfillment.";
     topActionBtnText.textContent = "Record Sale";
     loadOrders();
   } else if (viewName === "audit") {
     document.getElementById("viewAudit").classList.remove("hidden");
-    sectionTag.textContent = "Compliance & Security";
-    heading.textContent = "Audit Ledger";
-    subheading.textContent = "Complete chronological security log of system actions and inventory modifications.";
     topActionBtnText.textContent = "Export CSV";
     loadAuditLogs();
   }
 }
 
 function handleTopActionClick() {
-  const activeNav = document.querySelector(".nav-item.active")?.getAttribute("href");
+  const activeNav = document.querySelector(".nav-link.active")?.getAttribute("href");
   if (activeNav === "#products" && currentUser.role !== "staff") {
     openProductModal();
   } else if (activeNav === "#audit") {
@@ -262,13 +252,13 @@ async function loadDashboard() {
     document.getElementById("statRevenue").textContent = `$${metrics.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
     document.getElementById("statOrders").textContent = metrics.totalOrders;
     document.getElementById("statProducts").textContent = metrics.totalProducts;
-    document.getElementById("statStockUnits").textContent = `${metrics.totalStock} total units`;
+    document.getElementById("statStockUnits").textContent = `${metrics.totalStock} units`;
     document.getElementById("statAlerts").textContent = metrics.lowStockCount + metrics.outOfStockCount;
 
     // Recent orders table
     const tableBody = document.getElementById("recentOrdersTableBody");
     if (recentOrders.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-light);font-style:italic;">No sales recorded yet.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-light);font-style:italic;">No transactions recorded yet.</td></tr>`;
     } else {
       tableBody.innerHTML = recentOrders.map(o => `
         <tr>
@@ -276,7 +266,7 @@ async function loadDashboard() {
           <td><strong>${o.customer_name}</strong></td>
           <td style="font-family:var(--font-mono);font-weight:600;color:var(--terracotta);">$${parseFloat(o.total_amount).toFixed(2)}</td>
           <td><span class="ftag ftag-green">${o.payment_status}</span></td>
-          <td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-light);">${new Date(o.created_at).toLocaleDateString()}</td>
+          <td style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-light);">${new Date(o.created_at).toLocaleDateString()}</td>
         </tr>
       `).join("");
     }
@@ -285,17 +275,17 @@ async function loadDashboard() {
     const catList = document.getElementById("categorySalesList");
     const categories = Object.keys(categorySales);
     if (categories.length === 0) {
-      catList.innerHTML = `<p style="color:var(--text-light);font-size:0.88rem;font-style:italic;">No department sales data.</p>`;
+      catList.innerHTML = `<p style="color:var(--text-light);font-size:0.85rem;font-style:italic;">No departmental data available.</p>`;
     } else {
       catList.innerHTML = categories.map(cat => `
-        <div class="category-item">
-          <span class="cat-name"><i class="fa-solid fa-folder-closed" style="color:var(--terracotta);margin-right:8px;"></i> ${cat}</span>
-          <span class="cat-amount">$${categorySales[cat].toFixed(2)}</span>
+        <div class="department-row">
+          <span class="dept-name">${cat}</span>
+          <span class="dept-amount">$${categorySales[cat].toFixed(2)}</span>
         </div>
       `).join("");
     }
   } catch (err) {
-    showToast(`Dashboard error: ${err.message}`, "error");
+    showToast(`Dashboard: ${err.message}`, "error");
   }
 }
 
@@ -319,7 +309,7 @@ async function loadProducts() {
     allProducts = data.products;
     renderProductsTable(allProducts);
   } catch (err) {
-    showToast(`Error fetching products: ${err.message}`, "error");
+    showToast(`Error fetching catalog: ${err.message}`, "error");
   }
 }
 
@@ -346,7 +336,7 @@ function renderProductsTable(products) {
       <tr>
         <td>
           <div style="display:flex;align-items:center;gap:12px;">
-            <img src="${p.image_url}" alt="${p.name}" style="width:36px;height:36px;border-radius:var(--r);object-fit:cover;border:1px solid var(--sand);">
+            <img src="${p.image_url}" alt="${p.name}" style="width:34px;height:34px;border-radius:var(--r);object-fit:cover;border:1px solid var(--sand);">
             <div>
               <strong>${p.name}</strong>
             </div>
@@ -359,8 +349,8 @@ function renderProductsTable(products) {
         <td><span class="ftag ${badgeClass}">${p.status}</span></td>
         <td>
           <div style="display:flex;gap:6px;">
-            ${canEdit ? `<button class="btn btn-sm btn-o" onclick="openEditProductModal(${p.id})"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
-            ${canDelete ? `<button class="btn btn-sm btn-danger" onclick="handleDeleteProduct(${p.id}, '${p.name}')"><i class="fa-solid fa-trash"></i></button>` : ''}
+            ${canEdit ? `<button class="btn btn-sm btn-o" title="Edit Item" onclick="openEditProductModal(${p.id})"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M11.5 2.5L13.5 4.5L5 13H3V11L11.5 2.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>` : ''}
+            ${canDelete ? `<button class="btn btn-sm btn-danger" title="Remove Item" onclick="handleDeleteProduct(${p.id}, '${p.name}')"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 4H13M5 4V2H11V4M6 7V12M10 7V12M4 4L5 14H11L12 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>` : ''}
             ${!canEdit && !canDelete ? `<span class="mono-label" style="font-size:0.6rem;">Read Only</span>` : ''}
           </div>
         </td>
@@ -428,7 +418,7 @@ async function handleProductSubmit(e) {
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Failed to save product");
 
-    showToast(isEdit ? "Product updated successfully" : "Product cataloged successfully", "success");
+    showToast(isEdit ? "Product updated" : "Product cataloged", "success");
     closeProductModal();
     loadProducts();
   } catch (err) {
@@ -470,7 +460,7 @@ async function loadOrders() {
     allOrders = data.orders;
     renderOrdersTable(allOrders);
   } catch (err) {
-    showToast(`Error fetching orders: ${err.message}`, "error");
+    showToast(`Error fetching invoices: ${err.message}`, "error");
   }
 }
 
@@ -494,7 +484,7 @@ function renderOrdersTable(orders) {
         <td><strong style="color:var(--terracotta);font-family:var(--font-mono);">$${parseFloat(o.total_amount).toFixed(2)}</strong></td>
         <td><span class="ftag ftag-terra">${o.payment_method}</span></td>
         <td>${o.created_by_name || 'Staff'}</td>
-        <td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-light);">${new Date(o.created_at).toLocaleString()}</td>
+        <td style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-light);">${new Date(o.created_at).toLocaleString()}</td>
       </tr>
     `;
   }).join("");
@@ -524,7 +514,7 @@ function addOrderItemRow() {
   row.className = "order-item-row";
   row.id = rowId;
 
-  const options = allProducts.map(p => `<option value="${p.id}" data-price="${p.price}" data-stock="${p.stock_quantity}">${p.name} ($${p.price.toFixed(2)} - ${p.stock_quantity} available)</option>`).join("");
+  const options = allProducts.map(p => `<option value="${p.id}" data-price="${p.price}" data-stock="${p.stock_quantity}">${p.name} ($${p.price.toFixed(2)} - ${p.stock_quantity} avail)</option>`).join("");
 
   row.innerHTML = `
     <select class="order-prod-select" onchange="updateOrderTotal()" required>
@@ -532,8 +522,8 @@ function addOrderItemRow() {
       ${options}
     </select>
     <input type="number" class="order-prod-qty" min="1" value="1" oninput="updateOrderTotal()" required placeholder="Qty">
-    <span class="order-prod-subtotal" style="font-family:var(--font-mono);font-weight:600;font-size:0.85rem;text-align:right;color:var(--terracotta);">$0.00</span>
-    <button type="button" class="btn btn-sm btn-danger" onclick="removeOrderItemRow('${rowId}')"><i class="fa-solid fa-xmark"></i></button>
+    <span class="order-prod-subtotal" style="font-family:var(--font-mono);font-weight:600;font-size:0.82rem;text-align:right;color:var(--terracotta);">$0.00</span>
+    <button type="button" class="btn btn-sm btn-danger" onclick="removeOrderItemRow('${rowId}')"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></button>
   `;
 
   container.appendChild(row);
@@ -590,7 +580,7 @@ async function handleOrderSubmit(e) {
   }
 
   if (items.length === 0) {
-    showToast("Please select at least one item.", "error");
+    showToast("Please select at least one line item.", "error");
     return;
   }
 
@@ -648,15 +638,15 @@ async function loadAuditLogs() {
       </tr>
     `).join("");
   } catch (err) {
-    showToast(`Audit log error: ${err.message}`, "error");
+    showToast(`Audit ledger error: ${err.message}`, "error");
   }
 }
 
 // ========================
-// CSV EXPORT FEATURE
+// CSV EXPORT
 // ========================
 function exportCurrentTableToCSV() {
-  const activeNav = document.querySelector(".nav-item.active")?.getAttribute("href");
+  const activeNav = document.querySelector(".nav-link.active")?.getAttribute("href");
   let filename = "swiftstock_ledger_export.csv";
   let csvContent = "";
 
