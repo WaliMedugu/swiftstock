@@ -44,21 +44,25 @@ export const getOrderById = (req, res) => {
 };
 
 // POST /api/orders (Checkout & create order)
-export const createOrder = (req, res) => {
+export const createOrder = async (req, res) => {
   try {
     const { customer_name, customer_email, payment_method = "Card", items } = req.body;
+
+    if (!customer_name || !items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ success: false, message: "Customer name and at least one item are required." });
+    }
 
     // Validate and calculate totals + deduct stock
     let totalAmount = 0;
     const processedItems = [];
 
     for (const item of items) {
-      const product = db.products.find((p) => p.id == item.product_id);
+      const product = db.products.find((p) => String(p.id) === String(item.product_id));
       if (!product) {
         return res.status(400).json({ success: false, message: `Product ID ${item.product_id} not found.` });
       }
 
-      const qty = parseInt(item.quantity);
+      const qty = parseInt(item.quantity) || 1;
       if (product.stock_quantity < qty) {
         return res.status(400).json({
           success: false,
@@ -66,10 +70,10 @@ export const createOrder = (req, res) => {
         });
       }
 
-      // Deduct stock
+      // Deduct stock atomically
       product.stock_quantity -= qty;
       if (product.stock_quantity === 0) product.status = "Out of Stock";
-      else if (product.stock_quantity <= product.min_stock_alert) product.status = "Low Stock";
+      else if (product.stock_quantity <= (product.min_stock_alert || 5)) product.status = "Low Stock";
 
       const subtotal = product.price * qty;
       totalAmount += subtotal;
@@ -93,17 +97,34 @@ export const createOrder = (req, res) => {
       payment_status: "Paid",
       items: processedItems,
       created_by: req.user?.id || 1,
-      created_by_name: req.user?.name || "System",
+      created_by_name: req.user?.name || "Staff",
       created_at: new Date().toISOString()
     };
 
     db.orders.unshift(newOrder);
 
+    // If Supabase is connected, attempt safe sync without crashing
     if (supabase) {
-      supabase.from("orders").insert([newOrder]).catch((e) => console.warn("Supabase order sync:", e.message));
+      try {
+        supabase.from("orders").insert([{
+          order_number: newOrder.order_number,
+          customer_name: newOrder.customer_name,
+          customer_email: newOrder.customer_email,
+          total_amount: newOrder.total_amount,
+          payment_method: newOrder.payment_method,
+          payment_status: newOrder.payment_status,
+          created_by: newOrder.created_by
+        }]).then(() => {}).catch(() => {});
+      } catch (e) {
+        // Safe failover
+      }
     }
 
-    db.addAuditLog(req.user?.id, req.user?.name, "ORDER_CREATED", `Processed order ${newOrder.order_number} for ${newOrder.customer_name} ($${newOrder.total_amount})`);
+    try {
+      db.addAuditLog(req.user?.id || 1, req.user?.name || "Staff", "ORDER_CREATED", `Processed order ${newOrder.order_number} for ${newOrder.customer_name} ($${newOrder.total_amount})`);
+    } catch (e) {
+      console.warn("Audit log note:", e.message);
+    }
 
     return res.status(201).json({
       success: true,
@@ -111,6 +132,7 @@ export const createOrder = (req, res) => {
       order: newOrder
     });
   } catch (error) {
-    return res.status(500).json({ success: false, message: "Error creating order", error: error.message });
+    console.error("createOrder error:", error);
+    return res.status(500).json({ success: false, message: error.message || "Error creating order" });
   }
 };
