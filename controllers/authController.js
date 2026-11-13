@@ -2,7 +2,10 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { db, supabase } from "../config/supabase.js";
 
-const secretKey = process.env.JWT_SECRET || "default_jwt_secret_key_2026";
+const secretKey = process.env.JWT_SECRET;
+if (!secretKey) {
+  throw new Error("JWT_SECRET is not set. Add it to your environment (see README).");
+}
 
 // POST /api/auth/register
 export const registerUser = async (req, res) => {
